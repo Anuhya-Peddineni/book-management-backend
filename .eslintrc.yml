@@ -14,6 +14,8 @@ rules:
 overrides:
   - files:
       - "test/*.js"
+      - "test/integration/*.js"
     rules:
       no-undef: off
       no-unused-expressions: off
+      no-restricted-syntax: off

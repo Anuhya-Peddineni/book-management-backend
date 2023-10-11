@@ -6,29 +6,23 @@ module.exports = {
     customFHIRMessage: 'Request body should be an object with required fields',
     properties: {
       resourceType: { type: 'string', enum: ['Book'], customFHIRMessage: 'Incorrect resourceType passed' },
-      name: {
-        type: 'string',
-        minLength: 3,
-        maxLength: 63,
-        pattern: '^([a-z0-9]+[a-z0-9\\-]*[a-z0-9]+)+$',
-      },
       title: {
         type: 'string',
         minLength: 3,
         maxLength: 63,
-        pattern: '^([a-z0-9]+[a-z0-9\\-]*[a-z0-9]+)+$',
+        pattern: '^[a-zA-Z0-9-_. ]+$',
       },
       author: {
         type: 'string',
         minLength: 3,
         maxLength: 63,
-        pattern: '^([a-z0-9]+[a-z0-9\\-]*[a-z0-9]+)+$',
+        pattern: '^[a-zA-Z0-9-_. ]+$',
       },
       isbn: {
         type: 'string',
         minLength: 3,
         maxLength: 63,
-        pattern: '^([a-z0-9]+[a-z0-9\\-]*[a-z0-9]+)+$',
+        pattern: '^[a-zA-Z0-9-_. ]+$',
       },
       genre: {
         type: 'string',

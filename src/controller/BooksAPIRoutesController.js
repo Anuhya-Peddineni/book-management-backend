@@ -15,13 +15,15 @@ router.post('/', async (req, res) => {
     logger.debug('Create book request validation succeeded');
     const createdBook = await booksAPIService.createBook(req.body);
     logger.debug('Book creation succeeded', createdBook);
-    return res.status(201).json(createdBook);
+    return res.status(201).json(createdBook).end();
   } catch (error) {
     logger.error('Error while creating book ', error.message);
     if (error.errorType && error.message && error.httpStatus) {
-      return res.status(error.httpStatus).json(getErrorResponse(error.message, error.errorType));
+      return res.status(error.httpStatus)
+        .json(getErrorResponse(error.message, error.errorType))
+        .end();
     }
-    return res.status(500).json(getErrorResponse('Unknown error occurred', 'InternalServerError'));
+    return res.status(500).json(getErrorResponse('Unknown error occurred', 'InternalServerError')).end();
   }
 });
 
@@ -32,13 +34,15 @@ router.get('/', async (req, res) => {
     logger.debug('Read book request validation succeeded');
     const bookDetail = await booksAPIService.readBook(req.query);
     logger.debug('Read book succeeded', bookDetail);
-    return res.status(200).json(bookDetail);
+    return res.status(200).json(bookDetail).end();
   } catch (error) {
     logger.error('Error occurred while retrieving books ', error);
     if (error.errorType && error.message && error.httpStatus) {
-      return res.status(error.httpStatus).json(getErrorResponse(error.message, error.errorType));
+      return res.status(error.httpStatus)
+        .json(getErrorResponse(error.message, error.errorType))
+        .end();
     }
-    return res.status(500).json(getErrorResponse('Unknown error occurred', 'InternalServerError'));
+    return res.status(500).json(getErrorResponse('Unknown error occurred', 'InternalServerError')).end();
   }
 });
 
@@ -49,13 +53,15 @@ router.get('/:bookId', async (req, res) => {
     logger.debug('Read book by id request validation succeeded');
     const bookDetail = await booksAPIService.readBookById(req.params.bookId);
     logger.debug('Read book by id succeeded', bookDetail);
-    return res.status(200).json(bookDetail);
+    return res.status(200).json(bookDetail).end();
   } catch (error) {
     logger.error('Error occurred while retrieving book ', error);
     if (error.errorType && error.message && error.httpStatus) {
-      return res.status(error.httpStatus).json(getErrorResponse(error.message, error.errorType));
+      return res.status(error.httpStatus)
+        .json(getErrorResponse(error.message, error.errorType))
+        .end();
     }
-    return res.status(500).json(getErrorResponse('Unknown error occurred', 'InternalServerError'));
+    return res.status(500).json(getErrorResponse('Unknown error occurred', 'InternalServerError')).end();
   }
 });
 
@@ -66,13 +72,15 @@ router.put('/:bookId', async (req, res) => {
     logger.debug('Update book by id request validation succeeded');
     const bookDetail = await booksAPIService.updateBookById(req.body, req.params.bookId);
     logger.debug('Update book by id succeeded', bookDetail);
-    return res.status(200).json(bookDetail);
+    return res.status(200).json(bookDetail).end();
   } catch (error) {
     logger.error('Error occurred while updating book ', error);
     if (error.errorType && error.message && error.httpStatus) {
-      return res.status(error.httpStatus).json(getErrorResponse(error.message, error.errorType));
+      return res.status(error.httpStatus)
+        .json(getErrorResponse(error.message, error.errorType))
+        .end();
     }
-    return res.status(500).json(getErrorResponse('Unknown error occurred', 'InternalServerError'));
+    return res.status(500).json(getErrorResponse('Unknown error occurred', 'InternalServerError')).end();
   }
 });
 
@@ -83,13 +91,15 @@ router.delete('/:bookId', async (req, res) => {
     logger.debug('Delete book by id request validation succeeded');
     const bookDetail = await booksAPIService.deleteBookById(req.params.bookId);
     logger.debug('Delete book by id succeeded', bookDetail);
-    return res.status(204);
+    return res.status(204).end();
   } catch (error) {
     logger.error('Error occurred while deleting book ', error);
     if (error.errorType && error.message && error.httpStatus) {
-      return res.status(error.httpStatus).json(getErrorResponse(error.message, error.errorType));
+      return res.status(error.httpStatus)
+        .json(getErrorResponse(error.message, error.errorType))
+        .end();
     }
-    return res.status(500).json(getErrorResponse('Unknown error occurred', 'InternalServerError'));
+    return res.status(500).json(getErrorResponse('Unknown error occurred', 'InternalServerError')).end();
   }
 });
 

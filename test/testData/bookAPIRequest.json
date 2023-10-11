@@ -1,0 +1,21 @@
+{
+  "bookRequestWithCommonGenre": {
+    "resourceType": "Book",
+    "title": "Harry Potter",
+    "author": "Rowling",
+    "isbn": "ISBN 0-545-01022-5"
+  },
+  "bookRequestWithHorrorGenre": {
+    "resourceType": "Book",
+    "title": "Ghost Story",
+    "author": "Peter Straub",
+    "isbn": "ISBN 0-145-01022-5"
+  },
+  "bookUpdateRequestWithHorrorGenre": {
+    "resourceType": "Book",
+    "title": "Harry Potter",
+    "author": "Rowling",
+    "isbn": "ISBN 0-545-01022-5",
+    "genre": "Thriller"
+  }
+}

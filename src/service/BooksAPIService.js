@@ -10,8 +10,14 @@ module.exports = class BookAPIService {
   async createBook(bookDetail) {
     try {
       this.logger.debug('createBook function in service layer invoked', { bookDetail });
+      const existingBook = await this.booksAPIRepository.getBook({ title: bookDetail.title });
+      this.logger.debug('existingBook retrieved', { existingBook });
+      if (existingBook.length !== 0) {
+        throw new CustomError('UnprocessableEntity', 'Book with provided title already exists', 422);
+      }
       const createdBook = await this.booksAPIRepository.createBook(bookDetail);
       this.logger.debug('createBook function execution in service layer succeeded');
+      if (!bookDetail.genre) createdBook.genre = 'Common';
       return createdBook;
     } catch (error) {
       this.logger.error('createBook function in service layer resulted in error', { error });

@@ -37,6 +37,7 @@ module.exports = class BooksAPIRequestValidator {
         break;
       case 'PUT':
         valid = ajv.validate(CreateAndUpdateBookSchema, request.body);
+        if (valid === false) break;
         valid = ajv.validate(ReadAndDeleteBookSchema, request.params);
         break;
       default:
@@ -44,8 +45,21 @@ module.exports = class BooksAPIRequestValidator {
         throw new CustomError(`Provided request type ${requestType} is not accepted`);
     }
     if (!valid) {
-      const message = ajv.errors[0].parentSchema.customFHIRMessage
-        ? ajv.errors[0].parentSchema.customFHIRMessage : ajv.errors[0].message;
+      console.log(ajv.errors[0]);
+      let message;
+      if (ajv.errors[0].keyword === 'pattern') {
+        message = `Provided field ${ajv.errors[0].instancePath.replace('/', '')} has invalid characters`;
+      } else if (ajv.errors[0].keyword === 'enum') {
+        message = `Invalid ${ajv.errors[0].instancePath.replace('/', '')} passed`;
+      } else if (ajv.errors[0].keyword === 'minLength') {
+        message = `Provided field ${ajv.errors[0].instancePath.replace('/', '')} should atleast have ${ajv.errors[0].params.limit} characters`;
+      } else if (ajv.errors[0].keyword === 'maxLength') {
+        message = `Provided field ${ajv.errors[0].instancePath.replace('/', '')} can have atmost have ${ajv.errors[0].params.limit} characters`;
+      } else if (ajv.errors[0].parentSchema.customFHIRMessage) {
+        message = ajv.errors[0].parentSchema.customFHIRMessage;
+      } else {
+        message = ajv.errors[0].message;
+      }
       throw new CustomError('BadRequest', message, 400);
     }
   }
