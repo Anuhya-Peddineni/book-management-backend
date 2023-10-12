@@ -1,5 +1,0 @@
-{
-    "ServerPort": 5000,
-    "MongoDbUrl": "mongodb://127.0.0.1:27017/books",
-    "LogLevel": "debug"
-}

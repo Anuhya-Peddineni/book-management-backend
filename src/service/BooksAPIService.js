@@ -54,7 +54,8 @@ module.exports = class BookAPIService {
 
   async updateBookById(updatedBookDetail, bookId) {
     try {
-      this.logger.debug('updateBookById function in service layer invoked', { updatedBookDetail, bookId }, { new: true });
+      this.logger.debug('updateBookById function in service layer invoked', { updatedBookDetail, bookId });
+      updatedBookDetail.genre = updatedBookDetail.genre ? updatedBookDetail.genre : 'Common';
       const updatedBook = await this.booksAPIRepository.updateBookById(updatedBookDetail, bookId);
       if (updatedBook === null) {
         throw new CustomError('Not Found', 'Book does not exist', 404);

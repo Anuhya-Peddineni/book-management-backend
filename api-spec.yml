@@ -5,12 +5,12 @@ info:
   termsOfService: http://swagger.io/terms/
   version: "1"
 servers:
-  - url: https://petstore3.swagger.io/api/v3
+  - url: http://localhost:3000
 paths:
-  /api/books:
+  /books:
     post:
       tags:
-        - Book Management
+        - Book
       summary: Add a book
       description: Add a book
       parameters:
@@ -36,15 +36,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Book'
         400:
-          description: __Bad request.__ The resource could not be parsed or failed
-            basic validation rules.
+          description: __Bad request.__
           headers:
-            api-version:
-              description: optional
-              schema:
-                maximum: 1
-                minimum: 1
-                type: integer
             content-length:
               schema:
                 type: integer
@@ -55,27 +48,79 @@ paths:
                 minLength: 1
                 type: string
                 x-valid-chars: ^[a-zA-Z0-9=/-;]+$
-            transactionId:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationOutcome'
+        422:
+          description: __Unprocessable Entity.__
+          headers:
+            content-length:
+              schema:
+                type: integer
+                format: long
+            content-type:
               schema:
                 maxLength: 64
                 minLength: 1
                 type: string
-                x-valid-chars: ^[a-zA-Z0-9-]+$
+                x-valid-chars: ^[a-zA-Z0-9=/-;]+$
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OperationOutcome'
         500:
-          description: __Bad request.__ The resource could not be parsed or failed
-            basic validation rules.
+          description: __Internal Server Error.__
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OperationOutcome'
-  /api/books/{id}:
     get:
       tags:
-        - Book Management
+        - Book
+      summary: Returns all books with matching criteria
+      description: Returns all books with matching criteria
+      parameters:
+        - name: api-version
+          in: header
+          description: Version of this API. Different version numbers represent API changes that are incompatible with each other.
+          required: true
+          schema:
+            maximum: 1
+            minimum: 1
+            type: integer
+            default: 1
+        - name: genre
+          in: query
+          description: Genre of books to be retrived.
+          schema:
+            maxLength: 36
+            minLength: 1
+            type: string
+          x-valid-chars: '[a-zA-Z0-9-_.]'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetBook'
+        400:
+          description: __Bad request.__
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationOutcome'
+        500:
+          description: __Internal Server Error.__
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationOutcome'
+  /books/{bookId}:
+    get:
+      tags:
+        - Book
       summary: Returns book by the provided book ID
       description: Retrives book by provided ID
       parameters:
@@ -88,7 +133,7 @@ paths:
             minimum: 1
             type: integer
             default: 1
-        - name: id
+        - name: bookId
           in: path
           description: ID with which book should be retrieved.
           required: true
@@ -96,7 +141,7 @@ paths:
             maxLength: 36
             minLength: 1
             type: string
-          x-valid-chars: '[a-zA-Z0-9-_.]'
+          x-valid-chars: '^[0-9a-fA-F]{24}$'
       responses:
         200:
           description: successful operation
@@ -105,25 +150,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/Book'
         400:
-          description: Bad request.
+          description: __Bad request.__
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OperationOutcome'
         404:
           description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
         500:
-          description: __Bad request.__ The resource could not be parsed or failed
-            basic validation rules.
+          description: __Internal Server Error.__
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OperationOutcome'
     put:
       tags:
-        - Book Management
-      summary: Update book
-      description: Update book
+        - Book
+      summary: Update genre of book
+      description: Update genre of book
       parameters:
         - name: api-version
           in: header
@@ -134,7 +182,7 @@ paths:
             minimum: 1
             type: integer
             default: 1
-        - name: id
+        - name: bookId
           in: path
           description: id with which book should be retrieved.
           required: true
@@ -142,9 +190,9 @@ paths:
             maxLength: 36
             minLength: 1
             type: string
-          x-valid-chars: '[a-zA-Z0-9-_.]'
+          x-valid-chars: '^[0-9a-fA-F]{24}$'
       requestBody:
-        description: Update an existent user in the store
+        description: Update genre for existing book in store
         content:
           application/json:
             schema:
@@ -157,15 +205,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Book'
         400:
-          description: __Bad request.__ The resource could not be parsed or failed
-            basic validation rules.
+          description: __Bad request.__
           headers:
-            api-version:
-              description: optional
-              schema:
-                maximum: 1
-                minimum: 1
-                type: integer
             content-length:
               schema:
                 type: integer
@@ -176,26 +217,25 @@ paths:
                 minLength: 1
                 type: string
                 x-valid-chars: ^[a-zA-Z0-9=/-;]+$
-            transactionId:
-              schema:
-                maxLength: 64
-                minLength: 1
-                type: string
-                x-valid-chars: ^[a-zA-Z0-9-]+$
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OperationOutcome'
+        404:
+          description: Book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
         500:
-          description: __Bad request.__ The resource could not be parsed or failed
-            basic validation rules.
+          description: __Internal Server Error.__
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OperationOutcome'
     delete:
       tags:
-        - Book Management
+        - Book
       summary: Delete book by ID
       description:  Delete book by ID
       parameters:
@@ -208,7 +248,7 @@ paths:
             minimum: 1
             type: integer
             default: 1
-        - name: id
+        - name: bookId
           in: path
           description: id with which book should be retrieved.
           required: true
@@ -216,19 +256,24 @@ paths:
             maxLength: 36
             minLength: 1
             type: string
-          x-valid-chars: '[a-zA-Z0-9-_.]'
+          x-valid-chars: '^[0-9a-fA-F]{24}$'
       responses:
+        204:
+          description: __No Content.__
         400:
-          description: Bad request.
+          description: __Bad request.__
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/OperationOutcome'
         404:
-          description: Book already deleted
+          description: ___Book already deleted.__
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationOutcome'
         500:
-          description: __Bad request.__ The resource could not be parsed or failed
-            basic validation rules.
+          description: __InternaL Server Error.__
           content:
             application/json:
               schema:
@@ -260,16 +305,16 @@ components:
           maxLength: 1024
           minLength: 1
           type: string
-          description: Name of the book
-          default: "Book Name"
-          x-valid-chars: ^[a-zA-Z0-9=.-_?$:/#%&]+$
+          description: Title of the book
+          default: "Book Title"
+          x-valid-chars: ^[a-zA-Z0-9-_. ]+$
         author:
           maxLength: 1024
           minLength: 1
           type: string
           description: Name of the book
           default: "Book Author"
-          x-valid-chars: ^[a-zA-Z0-9=.-_?$:/#%&]+$
+          x-valid-chars: ^[a-zA-Z0-9-_. ]+$
         genre:
           maxLength: 1024
           minLength: 1
@@ -279,16 +324,21 @@ components:
           enum:
             - Common
             - Thriller
-            - Anime
-            - Drama
-          x-valid-chars: ^[a-zA-Z0-9=.-_?$:/#%&]+$
+            - Horror
+          x-valid-chars: ^[a-zA-Z0-9-_. ]+$
         isbn:
           maxLength: 1024
           minLength: 1
           type: string
           description: Name of the book
           default: "Book unique ISBN"
-          x-valid-chars: ^[a-zA-Z0-9=.-_?$:/#%&]+$
+          x-valid-chars: ^[a-zA-Z0-9-_. ]+$
+    GetBook:
+      type: array
+      minItems: 1
+      maxItems: 5
+      items:
+        $ref:  '#/components/schemas/Book'
     OperationOutcome:
       properties:
         resourceType:
@@ -296,8 +346,12 @@ components:
           default: OperationOutcome
           enum:
             - OperationOutcome
-          description: OperationOutcome in case of failure scenarios.
-        issue:
+          description: OperationOutcome in a failure case.
+        errorType:
+          type: string
+        message:
           type: string
       required:
-        - issue
+        - resourceType
+        - errorType
+        - message

@@ -45,7 +45,6 @@ module.exports = class BooksAPIRequestValidator {
         throw new CustomError(`Provided request type ${requestType} is not accepted`);
     }
     if (!valid) {
-      console.log(ajv.errors[0]);
       let message;
       if (ajv.errors[0].keyword === 'pattern') {
         message = `Provided field ${ajv.errors[0].instancePath.replace('/', '')} has invalid characters`;

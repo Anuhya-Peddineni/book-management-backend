@@ -1,3 +1,10 @@
+const dotenv = require('dotenv');
+const path = require('path');
+
+const env = process.env.NODE_ENV || 'dev';
+const envPath = path.resolve(__dirname, '..', 'config', `.env.${env}`);
+dotenv.config({ path: envPath });
+
 const express = require('express');
 const mongoose = require('mongoose');
 const logger = require('./common/Logger');
