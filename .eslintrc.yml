@@ -1,0 +1,21 @@
+env:
+  browser: true
+  commonjs: true
+  es2021: true
+extends: airbnb
+parserOptions:
+  ecmaVersion: latest
+rules:
+  no-use-before-define: off
+  import/no-dynamic-require: off
+  no-underscore-dangle: off
+  no-param-reassign: off
+  import/no-extraneous-dependencies: off
+overrides:
+  - files:
+      - "test/*.js"
+      - "test/integration/*.js"
+    rules:
+      no-undef: off
+      no-unused-expressions: off
+      no-restricted-syntax: off

@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  book-management-backend:
+    image: nodejs_mongo_docker
+    build: .
+    command: npm run start
+    env_file:
+      - config/.env.${NODE_ENV:-dev}
+    ports:
+      - "3000"
+    links:
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017"
+    volumes:
+      - book-management-backend:/data/db
+volumes:
+  book-management-backend:
